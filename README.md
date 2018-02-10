@@ -6,3 +6,4 @@ https://www.shiyanlou.com/louplus/python
 * [西域战神](https://github.com/LarryKameZhao/jobplus4-6)
 ## Contributors
 * [Y](https://github.com/Super1ZC/jobplus4-6)
+* [外星蚂蚁](https://github.com/chauncy-zhao/jobplus4-6/)
