@@ -1,9 +1,10 @@
+#-*-coding=utf8-*-
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy 
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash,check_password_hash
 
-
+# 中文测试
 db=SQLAlchemy()
 
 class Base(db.Model):
@@ -37,7 +38,6 @@ class User(UserMixin,Base):
     phone = db.Column(db.String(20))
     work_years = db.Column(db.SmallInteger)
     role = db.Column(db.SmallInteger,default=ROLE_USER)
-    # 网络浏览器
     resume = db.relationship('Resume',uselist=True)
     collect_jobs = db.relationship('Job',secondary=user_job)
 
