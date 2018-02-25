@@ -1,10 +1,10 @@
-#-*-coding=utf8-*-
+# -*- coding:utf-8 -*-
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy 
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash,check_password_hash
 
-# 中文测试
+
 db=SQLAlchemy()
 
 class Base(db.Model):
@@ -38,17 +38,18 @@ class User(UserMixin,Base):
     phone = db.Column(db.String(20))
     work_years = db.Column(db.SmallInteger)
     role = db.Column(db.SmallInteger,default=ROLE_USER)
+    #根据用户填写内容生成简历
     resume = db.relationship('Resume',uselist=True)
     collect_jobs = db.relationship('Job',secondary=user_job)
 
-    
+    #用户上传简历链接
 
     resume_url = db.Column(db.String(100))
 
-   
+    #企业用户详情
 
     detail = db.relationship('CompanyDetail',uselist=False)
-   
+    #是否禁用
     is_disable = db.Column(db.Boolean,default=False)
 
     def __repr__(self):
@@ -62,10 +63,10 @@ class User(UserMixin,Base):
         return self._password
     
     @password.setter
-   
+    #将密码转化为hash
     def password(self,origin_password):
         self._password=generate_password_hash(origin_password)
-   
+    #验证输入密码是否和原密码hash相同
     def check_password(self,password):
         return check_password_hash(self._password,password)
 
@@ -95,7 +96,7 @@ class Resume(Base):
     def profile(self):
         pass
 
-
+#工作经历和教育经历以及项目经历的基类
 
 class Experience(Base):
 
@@ -105,7 +106,7 @@ class Experience(Base):
     start_at = db.Column(db.DateTime)
     end_at = db.Column(db.DateTime)
 
-   
+    # 用于简易描述经历
     description = db.Column(db.String(1024))
 
 
@@ -140,7 +141,7 @@ class ProjectExperience(Experience):
     __tablename__ = 'project_experience'
 
     project_name = db.Column(db.String(100),nullable=False)
-   
+    #项目中扮演角色
     role =  db.Column(db.String(20),nullable=False)
     technologys = db.Column(db.String(100))
     resume_id = db.Column(db.Integer,db.ForeignKey('resume.id'))
@@ -155,21 +156,21 @@ class CompanyDetail(Base):
     logo = db.Column(db.String(256),nullable=False)
     site = db.Column(db.String(256),nullable=False)
     location = db.Column(db.String(24),nullable=False)
-    
+    #公司简介
     desription = db.Column(db.String(100))
 
-   
+    #描述详情
     about = db.Column(db.String(1024))
-   
+    #公司标签，用逗号隔开
     tags = db.Column(db.String(200))
-   
+    #技术栈
     stack = db.Column(db.String(200))
-   
+    #团队简介
     team_introduction = db.Column(db.String(200))
     welfares = db.Column(db.String(200))
-   
+    #业务领域
     field = db.Column(db.String(50))
-   
+    #融资进度
     finance_stage = db.Column(db.String(100))
     user_id = db.Column(db.Integer,db.ForeignKey('user.id',ondelete='SET NULL'))
     user = db.relationship('User', uselist=False, backref=db.backref('company_detail', uselist=False))
@@ -185,14 +186,14 @@ class Job(Base):
     __tablename__ = 'job'
 
     id = db.Column(db.Integer,primary_key=True)
-   
+    #职位名称
     name = db.Column(db.String(128),nullable=False)
         
     salary_low = db.Column(db.Integer,nullable=False)
     salary_high = db.Column(db.Integer,nullable=False)
-  
+    #工作地点
     location = db.Column(db.String(50),nullable=False)
-   
+    #职位标签，10个，用逗号隔开
     tags = db.Column(db.String(200),nullable=False)
     degree_requirement = db.Column(db.String(50))
     experience_requirement = db.Column(db.String(50))
@@ -212,19 +213,19 @@ class Job(Base):
 class Delivery(Base):
     __tablename__='delivery'
 
-   
+    #等待企业查看
     STATUS_WAITING = 1
 
-   
+    #拒绝
     STATUS_REJECT = 2
-    
+    #接受
     STATUS_ACCEPT = 3
 
     id = db.Column(db.Integer,primary_key=True)
     job_id = db.Column(db.Integer,db.ForeignKey('job.id',ondelete='SET NULL'))
     user_id = db.Column(db.Integer,db.ForeignKey('user.id',ondelete='SET NULL'))
     status = db.Column(db.SmallInteger,default=STATUS_WAITING)
-    
+    #企业回应
     response = db.Column(db.String(512))
 
 
